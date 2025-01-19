@@ -160,7 +160,12 @@ pub fn forall(_args: TokenStream, input: TokenStream) -> TokenStream {
                 tokens: quote! { test },
             }),
         })
-        .chain(fn_item.attrs)
+        .chain(
+            fn_item
+                .attrs
+                .into_iter()
+                .filter(|attr| matches!(attr.style, AttrStyle::Outer)),
+        )
         .chain(once(Attribute {
             pound_token: Default::default(),
             style: AttrStyle::Outer,
