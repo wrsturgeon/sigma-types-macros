@@ -10,10 +10,10 @@ use {
     proc_macro::TokenStream,
     quote::{format_ident, quote},
     syn::{
-        AttrStyle, Attribute, Block, Expr, ExprAssign, ExprCall, ExprPath, FnArg, Item, ItemFn,
-        MacroDelimiter, Meta, MetaList, Pat, PatIdent, PatType, Path, PathArguments, PathSegment,
-        ReturnType, Signature, Stmt, Type, TypePath, TypeReference, Visibility, parse_macro_input,
-        punctuated::Punctuated,
+        AttrStyle, Attribute, Block, Expr, ExprAssign, ExprCall, ExprPath, FnArg, GenericParam,
+        Generics, Item, ItemFn, MacroDelimiter, Meta, MetaList, Pat, PatIdent, PatType, Path,
+        PathArguments, PathSegment, ReturnType, Signature, Stmt, Type, TypePath, TypeReference,
+        Visibility, parse_macro_input, punctuated::Punctuated,
     },
 };
 
@@ -108,7 +108,12 @@ pub fn forall(_args: TokenStream, input: TokenStream) -> TokenStream {
         abi: None,
         asyncness: None,
         fn_token: signature.fn_token,
-        generics: signature.generics,
+        generics: Generics {
+            lt_token: None,
+            params: empty::<GenericParam>().collect(),
+            gt_token: None,
+            where_clause: None,
+        },
         ident: format_ident!("forall_{}", signature.ident),
         inputs: quickcheck_inputs,
         output: ReturnType::Type(
