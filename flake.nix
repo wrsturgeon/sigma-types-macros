@@ -122,6 +122,7 @@
           empty-enum = "allow";
           field-scoped-visibility-modifiers = "allow";
           float-arithmetic = "allow";
+          if-let-rescope = "allow";
           implicit-return = "allow";
           inline-always = "allow";
           map-err-ignore = "allow";
