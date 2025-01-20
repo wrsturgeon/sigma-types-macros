@@ -10,7 +10,7 @@ homepage = "https://github.com/wrsturgeon/sigma-types-macros"
 repository = "https://github.com/wrsturgeon/sigma-types-macros"
 license = "MPL-2.0"
 keywords = [ "proc-macro" ]
-categories = [ "proc-macro" ]
+categories = [ "development-tools::procedural-macro-helpers", "development-tools::testing" ]
 
 [lib]
 proc-macro = true

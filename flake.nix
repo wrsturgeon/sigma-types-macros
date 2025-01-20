@@ -113,7 +113,10 @@
 
         cargo-toml = "Cargo.toml";
         registry-keywords = [ "proc-macro" ];
-        registry-categories = [ "proc-macro" ];
+        registry-categories = [
+          "development-tools::procedural-macro-helpers"
+          "development-tools::testing"
+        ];
         override-lints = {
           default-trait-access = "allow";
           empty-enum = "allow";
@@ -288,27 +291,27 @@
                 set -ex
 
                 # No features:
-                ${full-toolchain}/bin/cargo-clippy -- --offline --all-targets --color=always --no-default-features
-                ${full-toolchain}/bin/cargo-clippy -- --offline --all-targets --color=always --no-default-features --release
+                ${full-toolchain}/bin/cargo-clippy -- --all-targets --color=always --no-default-features
+                ${full-toolchain}/bin/cargo-clippy -- --all-targets --color=always --no-default-features --release
                 ${
                   if features ? std then
                     ''
                       # No features except the standard library:
-                      ${full-toolchain}/bin/cargo-clippy -- --offline --all-targets --color=always --no-default-features --features=std
-                      ${full-toolchain}/bin/cargo-clippy -- --offline --all-targets --color=always --no-default-features --features=std --release
+                      ${full-toolchain}/bin/cargo-clippy -- --all-targets --color=always --no-default-features --features=std
+                      ${full-toolchain}/bin/cargo-clippy -- --all-targets --color=always --no-default-features --features=std --release
                     ''
                   else
                     ""
                 }
                 # All features that don't use the standard library:
-                ${full-toolchain}/bin/cargo-clippy -- --offline --all-targets --color=always --no-default-features --features=${
+                ${full-toolchain}/bin/cargo-clippy -- --all-targets --color=always --no-default-features --features=${
                   builtins.concatStringsSep "," (
                     builtins.filter (f: f != "std" && !(builtins.any (f: f == "std") features.${f}.other-features)) (
                       builtins.attrNames features
                     )
                   )
                 }
-                ${full-toolchain}/bin/cargo-clippy -- --offline --all-targets --color=always --no-default-features --features=${
+                ${full-toolchain}/bin/cargo-clippy -- --all-targets --color=always --no-default-features --features=${
                   builtins.concatStringsSep "," (
                     builtins.filter (f: f != "std" && !(builtins.any (f: f == "std") features.${f}.other-features)) (
                       builtins.attrNames features
@@ -316,8 +319,8 @@
                   )
                 } --release
                 # All features, including those that might use the standard library:
-                ${full-toolchain}/bin/cargo-clippy -- --offline --all-targets --color=always --all-features
-                ${full-toolchain}/bin/cargo-clippy -- --offline --all-targets --color=always --all-features --release
+                ${full-toolchain}/bin/cargo-clippy -- --all-targets --color=always --all-features
+                ${full-toolchain}/bin/cargo-clippy -- --all-targets --color=always --all-features --release
               '';
             };
         packages = {
@@ -338,7 +341,7 @@
                   tail = pkgs.coreutils;
                   tr = pkgs.coreutils;
                 };
-                clippy-help-cmd = "cargo clippy --no-deps --offline -- -Zunstable-options -W help > \${out}/clippy-help.txt 2>&1";
+                clippy-help-cmd = "cargo clippy --no-deps -- -Zunstable-options -W help > \${out}/clippy-help.txt 2>&1";
                 check-empty = file: ''
                   if [ ! -s "${file}" ]
                   then
