@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2024"
 publish = true
 authors = [ "Will Sturgeon" ]
-description = "Types checked for an invariant."
+description = "Macros to enhance the `sigma-types` crate"
 readme = "README.md"
 homepage = "https://github.com/wrsturgeon/sigma-types-macros"
 repository = "https://github.com/wrsturgeon/sigma-types-macros"
@@ -16,15 +16,15 @@ categories = [ "proc-macro" ]
 proc-macro = true
 
 [dependencies]
-proc-macro2 = { version = "*", default-features = false, features = [  ] }
-quote = { version = "*", default-features = false, features = [ "proc-macro" ] }
-syn = { version = "*", default-features = false, features = [ "clone-impls", "extra-traits", "full", "parsing", "printing", "proc-macro" ] }
+proc-macro2 = { version = "1.0.93", default-features = false, features = [  ] }
+quote = { version = "1.0.38", default-features = false, features = [ "proc-macro" ] }
+syn = { version = "1.0.109", default-features = false, features = [ "clone-impls", "extra-traits", "full", "parsing", "printing", "proc-macro" ] }
 
 
 [dev-dependencies]
-quickcheck = { version = "*", default-features = false, features = [  ] }
-quickcheck_macros = { version = "*", default-features = false, features = [  ] }
-sigma-types = { version = "*", default-features = false, features = [ "quickcheck" ] }
+quickcheck = { version = "1.0.3", default-features = false, features = [  ] }
+quickcheck_macros = { version = "1.0.0", default-features = false, features = [  ] }
+sigma-types = { version = "0.3.3", default-features = false, features = [ "quickcheck" ] }
 
 [features]
 

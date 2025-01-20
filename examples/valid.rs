@@ -1,8 +1,11 @@
 //! Check that a signature that *does* hold *doesn't* fail.
 
-#![expect(
-    unused_crate_dependencies,
-    reason = "not al examples use all dependencies"
+#![cfg_attr(
+    not(test),
+    expect(
+        unused_crate_dependencies,
+        reason = "not al examples use all dependencies"
+    )
 )]
 
 use {
@@ -16,7 +19,7 @@ fn main() {}
 
 /// Trivially convert a positive number into a non-negative number.
 #[forall]
-#[expect(dead_code, reason = "macro fodder")]
+#[cfg_attr(not(test), expect(dead_code, reason = "macro fodder"))]
 fn subset(x: Positive<u8>) -> NonNegative<u8> {
     x.also()
 }

@@ -11,9 +11,9 @@ use {
     quote::{format_ident, quote},
     syn::{
         AttrStyle, Attribute, Block, Expr, ExprAssign, ExprCall, ExprPath, FnArg, GenericParam,
-        Generics, Item, ItemFn, MacroDelimiter, Meta, MetaList, Pat, PatIdent, PatType, Path,
-        PathArguments, PathSegment, ReturnType, Signature, Stmt, Type, TypePath, TypeReference,
-        Visibility, parse_macro_input, punctuated::Punctuated,
+        Generics, Item, ItemFn, Pat, PatIdent, PatType, Path, PathArguments, PathSegment,
+        ReturnType, Signature, Stmt, Type, TypePath, TypeReference, Visibility, parse_macro_input,
+        punctuated::Punctuated, token::Comma,
     },
 };
 
@@ -38,7 +38,7 @@ pub fn forall(_args: TokenStream, input: TokenStream) -> TokenStream {
     };
 
     let signature = fn_item.sig;
-    let quickcheck_inputs: Punctuated<_, _> = signature
+    let quickcheck_inputs: Punctuated<FnArg, Comma> = signature
         .inputs
         .into_iter()
         .map(|arg_or_self| {
@@ -84,7 +84,7 @@ pub fn forall(_args: TokenStream, input: TokenStream) -> TokenStream {
             })
         })
         .collect();
-    let quickcheck_args = quickcheck_inputs
+    let quickcheck_args: Punctuated<Expr, Comma> = quickcheck_inputs
         .iter()
         .map(|fn_arg| {
             let FnArg::Typed(PatType {
@@ -147,18 +147,15 @@ pub fn forall(_args: TokenStream, input: TokenStream) -> TokenStream {
             pound_token: Default::default(),
             style: AttrStyle::Outer,
             bracket_token: Default::default(),
-            meta: Meta::List(MetaList {
-                path: Path {
-                    leading_colon: None,
-                    segments: once(PathSegment {
-                        arguments: PathArguments::None,
-                        ident: format_ident!("cfg"),
-                    })
-                    .collect(),
-                },
-                delimiter: MacroDelimiter::Paren(Default::default()),
-                tokens: quote! { test },
-            }),
+            path: Path {
+                leading_colon: None,
+                segments: once(PathSegment {
+                    arguments: PathArguments::None,
+                    ident: format_ident!("cfg"),
+                })
+                .collect(),
+            },
+            tokens: quote! { (test) },
         })
         .chain(
             fn_item
@@ -170,7 +167,7 @@ pub fn forall(_args: TokenStream, input: TokenStream) -> TokenStream {
             pound_token: Default::default(),
             style: AttrStyle::Outer,
             bracket_token: Default::default(),
-            meta: Meta::Path(Path {
+            path: Path {
                 leading_colon: Some(Default::default()),
                 segments: [
                     PathSegment {
@@ -184,7 +181,8 @@ pub fn forall(_args: TokenStream, input: TokenStream) -> TokenStream {
                 ]
                 .into_iter()
                 .collect(),
-            }),
+            },
+            tokens: quote! {},
         }))
         .collect(),
         vis: Visibility::Inherited,
@@ -192,7 +190,7 @@ pub fn forall(_args: TokenStream, input: TokenStream) -> TokenStream {
         block: Box::new(Block {
             brace_token: Default::default(),
             stmts: vec![
-                Stmt::Expr(
+                Stmt::Semi(
                     Expr::Assign(ExprAssign {
                         attrs: vec![],
                         left: Box::new(Expr::Path(ExprPath {
@@ -226,7 +224,7 @@ pub fn forall(_args: TokenStream, input: TokenStream) -> TokenStream {
                             args: quickcheck_args,
                         })),
                     }),
-                    Some(Default::default()),
+                    Default::default(),
                 ),
                 Stmt::Expr(
                     Expr::Call(ExprCall {
@@ -257,7 +255,7 @@ pub fn forall(_args: TokenStream, input: TokenStream) -> TokenStream {
                         paren_token: Default::default(),
                         args: empty::<Expr>().collect(),
                     }),
-                    None,
+                    // None,
                 ),
             ],
         }),

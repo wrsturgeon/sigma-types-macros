@@ -27,7 +27,7 @@
       let
         pname = "sigma-types-macros";
         version = "0.1.0";
-        synopsis = "Types checked for an invariant.";
+        synopsis = "Macros to enhance the `sigma-types` crate";
         description = synopsis;
         src = nix-filter {
           root = ./.;
@@ -261,10 +261,10 @@
               '';
 
               test = ''
-                cargo test
-                cargo test --release
-                cargo test --all-features
-                cargo test --all-features --release
+                cargo test --examples
+                cargo test --examples --release
+                cargo test --examples --all-features
+                cargo test --examples --all-features --release
               '';
 
               update-other-cargo-files =
